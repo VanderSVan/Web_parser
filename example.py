@@ -3,7 +3,6 @@
 #  ---------------------------------------------------------------------------
 # (This is a sample to improve your understanding of how to work this package)
 
-from pprint import pp
 from enum import Enum
 
 from utils.for_building_input_data import HtmlElem, TextElem, LinkElem, ButtonElem
