@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "pages-parser"
+version = "0.1.0"
+description = "Can parse pages in two ways: 1) iterate over a list of urls; 2) iterate pages by pressing the \"next page\" button."
+authors = ["VanderSVan <101255612+VanderSVan@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+selenium = "^4.3.0"
+fake-useragent = "^0.1.11"
+python-dotenv = "^0.20.0"
+webdriver-manager = "^3.8.0"
+packaging = "^21.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

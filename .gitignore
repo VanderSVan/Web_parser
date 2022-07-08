@@ -1,0 +1,4 @@
+/pages_parser_logger/logs/
+/.env
+.idea
+/collected_data/
