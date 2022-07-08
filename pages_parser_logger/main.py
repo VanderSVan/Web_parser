@@ -1,10 +1,22 @@
 import logging.config
+from typing import NoReturn
 
 from pages_parser_logger.settings import logger_config
 
-for logger_name in logging.Logger.manager.loggerDict:
-    logging.getLogger(logger_name).setLevel('CRITICAL')
 
+def set_level_for_other_loggers(level_name: str = 'CRITICAL') -> NoReturn:
+    level_names: tuple = ('DEBUG', 'SUCCESS', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
+
+    if level_name.upper() in level_names:
+        processed_level_name = level_name.upper()
+    else:
+        processed_level_name = 'CRITICAL'
+
+    for logger_name in logging.Logger.manager.loggerDict:
+        logging.getLogger(logger_name).setLevel(processed_level_name)
+
+
+set_level_for_other_loggers('CRITICAL')
 logging.config.dictConfig(logger_config)
 logger = logging.getLogger('pages_parser_full')
 
