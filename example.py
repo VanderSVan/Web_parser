@@ -3,7 +3,6 @@
 #  ---------------------------------------------------------------------------
 # (This is a sample to improve your understanding of how to work this package)
 
-from pprint import pp
 from enum import Enum
 
 from utils.for_building_input_data import HtmlElem, TextElem, LinkElem, ButtonElem
@@ -51,6 +50,7 @@ if __name__ == '__main__':
     # init folder:
     current_folder = Path(__file__).parent
     collected_data_folder = current_folder.joinpath('collected_data')
+
     # Parsing website hh.ru
     # init data
     google_driver = create_google_chrome_driver()
@@ -70,6 +70,7 @@ if __name__ == '__main__':
                                         page=hh_search_page,
                                         page_count=2)
 
+    # data collection
     try:
         for page_number, data in enumerate(hh_search_pages.collect_data_by_click_next_page(
                 start_page="https://hh.ru/search/vacancy?area=113&text=python&page=0")):
