@@ -1,10 +1,15 @@
+from pathlib import Path
+
 from packaging.version import parse as parse_ver
 
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
 from .tools import mode_type, version_type, user_agent, set_background_mode
+
+
+parent_dir = Path(__file__).parent
+path_to_driver = parent_dir.joinpath('chromedriver_win32', 'chromedriver')
 
 
 def create_google_chrome_driver(headers: str = user_agent.chrome,
@@ -27,7 +32,7 @@ def create_google_chrome_driver(headers: str = user_agent.chrome,
     if mode == "prod":
         set_background_mode(way=2, options=options)
 
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+    return webdriver.Chrome(service=Service(executable_path=str(path_to_driver)),
                             options=options)
 
 
