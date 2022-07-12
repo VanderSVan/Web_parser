@@ -4,13 +4,17 @@ from pathlib import Path
 from urllib.parse import ParseResult, urlparse, parse_qs, urlencode
 from typing import NoReturn
 
+import pickle  # package for load/dump cookies
+from selenium import webdriver
+
 from utils.type_hinting import Link
+from utils.decorators import try_except_decorator
+from utils.decorators import write_log
+
 
 #  ---------------------------------------------------------------------------
 #   Helper classes
 #  ---------------------------------------------------------------------------
-
-
 @dataclass
 class Url:
     sample_link: Link
@@ -46,14 +50,32 @@ class Url:
 #  ---------------------------------------------------------------------------
 #   Helper functions
 #  ---------------------------------------------------------------------------
-
-
+@write_log(before_msg="Saving data to json file...",
+           after_msg="Data successfully saved.")
+@try_except_decorator
 def save_data_to_json_file(json_file: Path, data: dict) -> NoReturn:
-    try:
-        parent_dir = json_file.parent
-        parent_dir.mkdir(parents=True, exist_ok=True)
-        with json_file.open(mode="w") as file:
-            json.dump(data, file, indent=2)
-    except Exception as err:
-        print(f"Got EXCEPTION: "
-              f"{err}.\n")
+    """Writes data to json file"""
+    parent_dir = json_file.parent
+    parent_dir.mkdir(parents=True, exist_ok=True)
+    with json_file.open(mode="w") as file:
+        json.dump(data, file, indent=2)
+
+
+@write_log(before_msg="Reading cookies from file...",
+           after_msg="Cookies have been successfully read.")
+@try_except_decorator
+def read_cookies_from_file(driver: webdriver, cookies_file: Path) -> NoReturn:
+    """Reads cookies from binary file and add them to webdriver session"""
+    with cookies_file.open(mode="rb") as cookies:
+        for cookie in pickle.load(cookies):
+            driver.add_cookie(cookie)
+
+
+@write_log(before_msg="Saving cookies to file...",
+           after_msg="Cookies successfully saved.")
+@try_except_decorator
+def write_cookies_to_file(driver: webdriver, cookies_file: Path) -> NoReturn:
+    """Writes cookies to binary file from a webdriver session"""
+    cookies_file.parent.mkdir(parents=True, exist_ok=True)
+    with cookies_file.open(mode="wb") as cookies:
+        pickle.dump(driver.get_cookies(), cookies)

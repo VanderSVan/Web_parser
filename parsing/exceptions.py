@@ -31,3 +31,21 @@ class ValueIsEmpty(ValueError):
 class ValueIsWrong(ValueError):
     """Raises if it gets wrong value"""
     text_err: str
+
+
+@dataclass
+class AuthCookiesIncorrect(Exception):
+    """Raise if given an incorrect cookies"""
+    text_err: str
+
+
+@dataclass
+class AuthLoginPasswordIncorrect(Exception):
+    """Raise if given an incorrect login or password"""
+    text_err: str
+
+
+@dataclass
+class BreakOut(Exception):
+    """Raise if necessary to stop the driver"""
+    text_err: str

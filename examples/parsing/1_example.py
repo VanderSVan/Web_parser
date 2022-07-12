@@ -42,7 +42,6 @@ if __name__ == '__main__':
     from pathlib import Path
 
     from selenium_drivers.google_chrome import create_google_chrome_driver
-    from rich.progress import track
 
     from parsing.data_collection import (
         Page,
@@ -52,12 +51,12 @@ if __name__ == '__main__':
     )
 
     # init folder:
-    current_folder = Path(__file__).parent.parent
+    current_folder = Path(__file__).parent
     collected_data_folder = current_folder.joinpath('collected_data')
 
     # Parsing website hh.ru
     # init data
-    google_driver = create_google_chrome_driver(mode='prod')
+    google_driver = create_google_chrome_driver()
 
     parser = PageParser(driver=google_driver)
 
@@ -68,7 +67,8 @@ if __name__ == '__main__':
                                     PageData.url,
                                     PageData.address],
                           end_of_page=PageData.end_of_page,
-                          pagination=hh_search_page_pagination)
+                          pagination=hh_search_page_pagination,
+                          authentication=None)
 
     hh_search_pages = PageDataCollector(parser=parser,
                                         page=hh_search_page,

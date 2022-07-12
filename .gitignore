@@ -1,6 +1,6 @@
 /page_parser_logger/logs/
 /.env
 .idea
-/collected_data/
 /gg.py
-/examples/collected_data/
+/examples/auth/cookies/
+/examples/parsing/collected_data/
