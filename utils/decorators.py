@@ -2,9 +2,10 @@ import inspect
 from typing import Any, NoReturn
 
 from selenium.common.exceptions import NoSuchElementException
+
 from rich.console import Console
 
-from page_parser_logger.main import logger
+from web_parser_logger.main import logger
 
 console = Console()
 
@@ -80,3 +81,13 @@ def write_log(before_msg: str, after_msg: str,
         return gen_wrapper if inspect.isgeneratorfunction(func) else func_wrapper
 
     return decorator
+
+
+def try_except_decorator(func):
+    def inner_wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as error_message:
+            print(f"{error_message=}.\n")
+
+    return inner_wrapper
