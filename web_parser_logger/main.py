@@ -1,7 +1,7 @@
 import logging.config
 from typing import NoReturn
 
-from page_parser_logger.settings import logger_config
+from web_parser_logger.settings import logger_config
 
 
 def set_level_for_other_loggers(level_name: str = 'CRITICAL') -> NoReturn:

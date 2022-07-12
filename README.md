@@ -8,10 +8,12 @@ To run examples on Windows:
     ```commandline
     py -m examples.parsing.1_example
     ```
+   
 2) 
     ```commandline
     py -m examples.parsing.2_example
     ```
+   
 3)
     ```commandline
     py -m examples.auth.1_example

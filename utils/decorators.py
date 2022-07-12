@@ -5,7 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from rich.console import Console
 
-from page_parser_logger.main import logger
+from web_parser_logger.main import logger
 
 console = Console()
 

@@ -1,4 +1,4 @@
-/page_parser_logger/logs/
+/web_parser_logger/logs/
 /.env
 .idea
 /gg.py
