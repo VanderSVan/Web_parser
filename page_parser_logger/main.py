@@ -1,7 +1,7 @@
 import logging.config
 from typing import NoReturn
 
-from pages_parser_logger.settings import logger_config
+from page_parser_logger.settings import logger_config
 
 
 def set_level_for_other_loggers(level_name: str = 'CRITICAL') -> NoReturn:
@@ -18,7 +18,7 @@ def set_level_for_other_loggers(level_name: str = 'CRITICAL') -> NoReturn:
 
 set_level_for_other_loggers('CRITICAL')
 logging.config.dictConfig(logger_config)
-logger = logging.getLogger('pages_parser_full')
+logger = logging.getLogger('pages_parser_files')
 
 
 if __name__ == '__main__':

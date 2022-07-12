@@ -35,11 +35,15 @@ class PageData(Enum):
     next_page = ButtonElem(xpath="//a [@class='bloko-button'][@data-qa='pager-next']")
     previous_page = ButtonElem(xpath="//a [@class='bloko-button'][@data-qa='first-page']")
     end_of_page = HtmlElem(xpath="//div [@class='bloko-gap bloko-gap_bottom']")
+    wrong_value = HtmlElem(xpath="//div [@class='bloko-gap bloko-gap_bottodfdfsm']")
 
 
 if __name__ == '__main__':
     from pathlib import Path
+
     from selenium_drivers.google_chrome import create_google_chrome_driver
+    from rich.progress import track
+
     from parsing.data_collection import (
         Page,
         PageParser,
@@ -48,12 +52,12 @@ if __name__ == '__main__':
     )
 
     # init folder:
-    current_folder = Path(__file__).parent
+    current_folder = Path(__file__).parent.parent
     collected_data_folder = current_folder.joinpath('collected_data')
 
     # Parsing website hh.ru
     # init data
-    google_driver = create_google_chrome_driver()
+    google_driver = create_google_chrome_driver(mode='prod')
 
     parser = PageParser(driver=google_driver)
 
@@ -68,13 +72,17 @@ if __name__ == '__main__':
 
     hh_search_pages = PageDataCollector(parser=parser,
                                         page=hh_search_page,
-                                        page_count=2)
+                                        pages_count=2)
 
     # data collection
     try:
-        for page_number, data in enumerate(hh_search_pages.collect_data_by_click_next_page(
-                start_page="https://hh.ru/search/vacancy?area=113&text=python&page=0")):
-            json_file_name: str = f"data_from_page_{page_number}"
+        for page_number, data in enumerate(
+                hh_search_pages.collect_data_by_click_next_page(
+                start_page="https://hh.ru/search/vacancy?area=113&text=python&page=0"
+                ),
+                start=1
+        ):
+            json_file_name: str = f"data_from_page_{page_number}.json"
             json_file: Path = collected_data_folder.joinpath(json_file_name)
             save_data_to_json_file(json_file, data)
     except Exception as error_message:

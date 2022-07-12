@@ -1,4 +1,6 @@
-/pages_parser_logger/logs/
+/page_parser_logger/logs/
 /.env
 .idea
 /collected_data/
+/gg.py
+/examples/collected_data/
