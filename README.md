@@ -4,6 +4,7 @@ Can parse pages in two ways:
 2) iterate pages by pressing the "next page" button.
 
 To run examples on Windows:
+
 1) 
     ```commandline
     py -m examples.parsing.1_example
