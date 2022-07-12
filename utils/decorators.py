@@ -2,8 +2,11 @@ import inspect
 from typing import Any, NoReturn
 
 from selenium.common.exceptions import NoSuchElementException
+from rich.console import Console
 
-from pages_parser_logger.main import logger
+from page_parser_logger.main import logger
+
+console = Console()
 
 
 def handle_func_errors(func):
@@ -11,12 +14,16 @@ def handle_func_errors(func):
         try:
             return func(self, *args, **kwargs)
         except NoSuchElementException:
-            logger.exception(
+            message = (
                 f"NoSuchElementException from function '{func.__name__}': "
-                f"Element '{args[0].name}' does not exists.\n")
+                f"Element '{args[0].name}' does not exists.\n"
+            )
+            logger.exception(message)
+            console.print_exception()
         except Exception as ex:
             message = f"{ex.__class__.__name__} from '{func.__name__}': {ex}"
             logger.exception(message)
+            console.print_exception()
 
     return inner_wrapper
 
@@ -60,7 +67,7 @@ def write_log(before_msg: str, after_msg: str,
 
         def gen_wrapper(*args, **kwargs):
             logger_before(before_msg)
-            for output in func(*args, **kwargs):  # Force the generator for first the iters-1 tests
+            for output in func(*args, **kwargs):
                 yield output
             logger_after(after_msg)
 

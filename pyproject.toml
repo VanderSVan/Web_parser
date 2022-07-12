@@ -11,6 +11,7 @@ fake-useragent = "^0.1.11"
 python-dotenv = "^0.20.0"
 webdriver-manager = "^3.8.0"
 packaging = "^21.3"
+rich = "^12.4.4"
 
 [tool.poetry.dev-dependencies]
 

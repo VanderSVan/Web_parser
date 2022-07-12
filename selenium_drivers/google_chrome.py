@@ -21,10 +21,11 @@ def create_google_chrome_driver(headers: str = user_agent.chrome,
     :return: instance of webdriver.Chrome.
     """
     options = disable_webdriver_mode(google_version=version)
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument(f"user-agent={headers}")
 
     if mode == "prod":
-        set_background_mode(way=1, options=options)
+        set_background_mode(way=2, options=options)
 
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                             options=options)

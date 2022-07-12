@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
+from rich.console import Console
 
 from parsing.exceptions import (
     NotSupportedAttribute,
@@ -19,6 +20,9 @@ from utils.type_hinting import (
     Element_for_parsing,
 )
 from utils.decorators import handle_page_parser_exceptions, write_log
+from utils.progress_bars import set_progress_bar
+
+console = Console()
 
 
 @dataclass
@@ -193,29 +197,31 @@ class PageParser:
 class PageDataCollector:
     parser: PageParser
     page: Page
-    page_count: int = None
+    pages_count: int = None
 
+    @set_progress_bar(known_amount=True)
     @write_log(before_msg="Collecting data by URLs...",
                after_msg="Data collection by URLs completed.\n")
-    def collect_data_by_urls(self, page_links: list[Link]) -> Iterator[dict[str, dict | str]]:
+    def collect_data_from_links(self, page_links: list[Link]) -> Iterator[dict[str, dict | str]]:
         """
         This is links iterator.
         Iterate URLs, collecting data from them.
         Returns data from one page and waits for the execution of the higher function.
         """
-        page_counter = 0
-        for url in page_links:
-            if page_counter == self.page_count:
+        number_of_pages = (len(page_links) and self.pages_count) or len(page_links)
+        if number_of_pages == 0:
+            raise ValueIsEmpty("'PageDataCollector.collect_data_by_urls.page_links' cannot be empty")
+
+        for page_number, url in enumerate(page_links, start=1):
+            if page_number > number_of_pages:
                 break
             self.parser.open_page(page_url=url, delay_after=2)
             self.parser.find_element_by_scroll(elem=self.page.end_of_page,
                                                stop_scroll_elem=self.page.end_of_page,
                                                delay_after=1)
             yield self.parser.get_data_from_page_elements(elements=self.page.elements)
-            page_counter += 1
 
-        print(f"{page_counter} pages collected")
-
+    @set_progress_bar()
     @write_log(before_msg="Collecting data by click 'next page'...",
                after_msg="Data collection by click 'next page' completed.\n")
     def collect_data_by_click_next_page(self, start_page: Link) -> Iterator[dict[str, dict | str]]:
@@ -230,7 +236,7 @@ class PageDataCollector:
         if not self.page.pagination.next_page_button:
             raise ValueIsEmpty("Attribute 'page.pagination.next_page_button' cannot be empty")
 
-        for _ in self._paginate(start_page, self.page.pagination):
+        for page_number, _ in enumerate(self._paginate(start_page, self.page.pagination), start=1):
             yield self.parser.get_data_from_page_elements(elements=self.page.elements)
 
     def _paginate(self, start_page: Link, pagination: Pagination) -> Iterator:
@@ -258,9 +264,8 @@ class PageDataCollector:
                 print("Reached the last page")
                 break
 
-            elif self.page_count and (self.page_count == page_counter):
+            elif self.pages_count and (self.pages_count == page_counter):
                 break
 
             else:
                 self.parser.click_element(elem=pagination.next_page_button)
-        print(f"{page_counter} pages collected")
